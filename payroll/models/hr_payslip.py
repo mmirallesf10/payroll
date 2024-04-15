@@ -32,12 +32,12 @@ class HrPayslip(models.Model):
     struct_id = fields.Many2one(
         "hr.payroll.structure",
         string="Structure",
-        readonly=True,
+        readonly=True, compute='_compute_structure_contract',
         help="Defines the rules that have to be applied to this payslip, "
         "accordingly to the contract chosen. If you let empty the field "
         "contract, this field isn't mandatory anymore and thus the rules "
         "applied will be all the rules set on the structure of all contracts "
-        "of the employee valid for the chosen period",
+        "of the employee valid for the chosen period", store=True
     )
     name = fields.Char(string="Payslip Name", readonly=True)
     number = fields.Char(
@@ -157,6 +157,10 @@ class HrPayslip(models.Model):
     prevent_compute_on_confirm = fields.Boolean(
         "Prevent Compute on Confirm", compute="_compute_prevent_compute_on_confirm"
     )
+    @api.onchange('contract_id')
+    def _compute_structure_contract(self):
+        for rec in self:
+            rec.struct_id = rec.contract_id.struct_id.id
 
     def _compute_allow_cancel_payslips(self):
         self.allow_cancel_payslips = (
