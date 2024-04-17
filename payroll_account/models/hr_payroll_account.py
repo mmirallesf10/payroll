@@ -114,7 +114,7 @@ class HrPayslip(models.Model):
                 analytic_salary_id = line.salary_rule_id.analytic_account_id.id
                 move_line_analytic_ids = []
                 if analytic_salary_id:
-                    move_line_analytic_ids.append((4, analytic_salary_id.id))
+                    move_line_analytic_ids.append((4, analytic_salary_id))
                 elif slip.contract_id.analytic_account_id:
                     move_line_analytic_ids.append(
                         (4, slip.contract_id.analytic_account_id.id)
@@ -134,7 +134,7 @@ class HrPayslip(models.Model):
                         self.env["account.tax.repartition.line"]
                         .search(
                             [
-                                ("invoice_tax_id", "in", account_tax_ids),
+                                ("tag_ids", "in", account_tax_ids),
                                 ("repartition_type", "=", "base"),
                             ]
                         )
@@ -148,7 +148,7 @@ class HrPayslip(models.Model):
                         .search(
                             [
                                 (
-                                    "invoice_tax_id",
+                                    "tax_id",
                                     "=",
                                     line.salary_rule_id.account_tax_id.id,
                                 ),
@@ -162,7 +162,7 @@ class HrPayslip(models.Model):
                         .search(
                             [
                                 (
-                                    "invoice_tax_id",
+                                    "tax_id",
                                     "=",
                                     line.salary_rule_id.account_tax_id.id,
                                 ),
