@@ -785,3 +785,5 @@ class HrPayslip(models.Model):
             return line[0].total
         else:
             return 0.0
+
+

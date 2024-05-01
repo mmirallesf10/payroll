@@ -22,6 +22,9 @@
                         on Payslips Run.
                     </span>
                 </group>
+                <div>
+                    <field name="struct_id"/>
+                </div>
                 <group colspan="4">
                     <separator string="Employees" colspan="4" />
                     <newline />

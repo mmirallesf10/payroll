@@ -31,6 +31,9 @@ class HrSalaryRule(models.Model):
         help="If the active field is set to false, it will allow you to hide"
         " the salary rule without removing it.",
     )
+    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
+    appears_on_employee_cost_dashboard = fields.Boolean(string='View on Employer Cost Dashboard', default=False,
+                                                        help="Used to display the value in the employer cost dashboard.")
     appears_on_payslip = fields.Boolean(
         string="Appears on Payslip",
         default=True,

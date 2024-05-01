@@ -12,5 +12,5 @@ class HrRuleInput(models.Model):
         required=True, help="The code that can be used in the salary rules"
     )
     input_id = fields.Many2one(
-        "hr.salary.rule", string="Salary Rule Input", required=True
+        "hr.salary.rule", string="Salary Rule Input"
     )

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 
@@ -9,6 +9,10 @@ class HrPayslipEmployees(models.TransientModel):
     employee_ids = fields.Many2many(
         "hr.employee", "hr_employee_group_rel", "payslip_id", "employee_id", "Employees"
     )
+
+    struct_id = fields.Many2one('hr.payroll.structure', string='Salary Structure', required=True,
+                                help="Si lo que desea es relizar una nómina por días trabajados seleccione (operativa o "
+                                     "administrativa).")
 
     def compute_sheet(self):
         payslips = self.env["hr.payslip"]
@@ -32,7 +36,7 @@ class HrPayslipEmployees(models.TransientModel):
             res = {
                 "employee_id": employee.id,
                 "name": slip_data["value"].get("name"),
-                "struct_id": slip_data["value"].get("struct_id"),
+                'struct_id': self.struct_id and self.struct_id.id or slip_data['value'].get('struct_id'),
                 "contract_id": slip_data["value"].get("contract_id"),
                 "payslip_run_id": active_id,
                 "input_line_ids": [
@@ -50,3 +54,9 @@ class HrPayslipEmployees(models.TransientModel):
         payslips._compute_name()
         payslips.compute_sheet()
         return {"type": "ir.actions.act_window_close"}
+
+
+    @api.onchange('struct_id')
+    def _onchange_struct(self):
+        if self.struct_id:
+            self.employee_ids = self.env["hr.employee"].search([('contract_id.struct_id', '=', self.struct_id.id)])

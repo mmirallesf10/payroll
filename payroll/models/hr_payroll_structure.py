@@ -5,13 +5,6 @@ from odoo.exceptions import ValidationError
 
 
 class HrPayrollStructure(models.Model):
-    """
-    Salary structure used to defined
-    - Basic
-    - Allowances
-    - Deductions
-    """
-
     _name = "hr.payroll.structure"
     _description = "Salary Structure"
 
@@ -28,6 +21,9 @@ class HrPayrollStructure(models.Model):
         copy=False,
         default=lambda self: self.env.company,
     )
+    active = fields.Boolean('Active', default=True)
+    type_id = fields.Many2one(
+        'hr.payroll.structure.type')
     note = fields.Text(string="Description")
     parent_id = fields.Many2one(
         "hr.payroll.structure", string="Parent", default=_get_parent
